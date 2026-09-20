@@ -1,4 +1,5 @@
 export type CellValue = ' ' | 'x' | 'o';
+export type GameMode = 'ai-random' | 'ai-smart' | 'pvp';
 
 export interface GameState {
   board: CellValue[]; // 1-indexed conceptually: board[1] to board[9]
@@ -6,7 +7,7 @@ export interface GameState {
   currentTurn: number; // 0 to 8
   isGameOver: boolean;
   winner: 'user1' | 'user2' | 'draw' | null;
-  mode: 'pvp' | 'ai'; // 2-player or vs computer
+  mode: GameMode; // 'ai-random' (default), 'ai-smart', or 'pvp'
   waitingForInput: boolean;
 }
 
@@ -67,7 +68,7 @@ export function checkWinner(board: CellValue[]): 'user1' | 'user2' | null {
   return null;
 }
 
-export function createInitialState(mode: 'pvp' | 'ai' = 'pvp'): GameState {
+export function createInitialState(mode: GameMode = 'ai-random'): GameState {
   return {
     board: [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], // indices 0..9, 0 unused
     pickedCells: [],
@@ -80,11 +81,56 @@ export function createInitialState(mode: 'pvp' | 'ai' = 'pvp'): GameState {
 }
 
 /**
- * Random move selector for bot ('o') - purely random shots
+ * Purely random move selector for bot ('o')
  */
-export function getBestAIMove(_board: CellValue[], picked: number[]): number {
+export function getRandomAIMove(picked: number[]): number {
   const available = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(c => !picked.includes(c));
   if (available.length === 0) return 0;
-  // Random shot from available open cells
   return available[Math.floor(Math.random() * available.length)];
 }
+
+/**
+ * Tactical / Smart move selector for bot ('o')
+ */
+export function getSmartAIMove(board: CellValue[], picked: number[]): number {
+  const available = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(c => !picked.includes(c));
+  if (available.length === 0) return 0;
+
+  // 1. Can AI win in one move?
+  for (const cell of available) {
+    const copy = [...board];
+    copy[cell] = 'o';
+    if (checkWinner(copy) === 'user2') return cell;
+  }
+
+  // 2. Can player win in one move? Block it!
+  for (const cell of available) {
+    const copy = [...board];
+    copy[cell] = 'x';
+    if (checkWinner(copy) === 'user1') return cell;
+  }
+
+  // 3. Take center cell 5 if available
+  if (available.includes(5)) return 5;
+
+  // 4. Take corners
+  const corners = [1, 3, 7, 9].filter(c => available.includes(c));
+  if (corners.length > 0) {
+    return corners[Math.floor(Math.random() * corners.length)];
+  }
+
+  // 5. Fallback to random
+  return available[Math.floor(Math.random() * available.length)];
+}
+
+/**
+ * Unified bot selector based on selected mode
+ */
+export function getAIMove(mode: GameMode, board: CellValue[], picked: number[]): number {
+  if (mode === 'ai-smart') {
+    return getSmartAIMove(board, picked);
+  }
+  // Default to random shots
+  return getRandomAIMove(picked);
+}
+

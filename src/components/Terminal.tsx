@@ -13,12 +13,13 @@ import {
 import confetti from 'canvas-confetti';
 import {
   GameState,
+  GameMode,
   CellValue,
   createInitialState,
   formatOctothrope,
   INITIAL_GUIDE,
   checkWinner,
-  getBestAIMove
+  getAIMove
 } from '../game/tictactoe_engine';
 import { PYTHON_TICTACTOE_CODE } from '../game/tictactoe_code';
 import { playKeyClick, playEnterSound, playWinSound, playErrorSound } from '../lib/sound';
@@ -272,20 +273,26 @@ export const Terminal: FC<TerminalProps> = ({
     setInputPrompt(`user${nextPlayerNum}: enter which cell do you want to mark ; `);
 
     // If vs AI and it's AI's turn (user2, 'o')
-    if (mode === 'ai' && nextPlayerNum === 2) {
+    if (mode !== 'pvp' && nextPlayerNum === 2) {
       setTimeout(() => {
-        const aiCell = getBestAIMove(newBoard, newPicked);
+        const aiCell = getAIMove(mode, newBoard, newPicked);
         if (aiCell > 0) {
           // AI types its move
           if (soundEnabled) playKeyClick();
-          processAIMove(aiCell, newBoard, newPicked, nextTurn);
+          processAIMove(aiCell, newBoard, newPicked, nextTurn, mode);
         }
       }, 500);
     }
   }, [gameState, setGameState, soundEnabled]);
 
   // Handle AI turn
-  const processAIMove = (aiCell: number, board: CellValue[], picked: number[], turn: number) => {
+  const processAIMove = (
+    aiCell: number,
+    board: CellValue[],
+    picked: number[],
+    turn: number,
+    botMode: GameMode
+  ) => {
     const newBoard = [...board];
     newBoard[aiCell] = 'o';
     const newPicked = [...picked, aiCell];
@@ -294,11 +301,13 @@ export const Terminal: FC<TerminalProps> = ({
     const winner = checkWinner(newBoard);
     const isDraw = !winner && newPicked.length === 9;
 
+    const botLabel = botMode === 'ai-smart' ? '[Bot: Smart Move]' : '[Bot: Random Shot]';
+
     const updatedLines: TerminalLine[] = [
       {
         id: `ai-input-${Date.now()}`,
         type: 'prompt',
-        content: `user2: enter which cell do you want to mark ; ${aiCell} [AI Move]`
+        content: `user2: enter which cell do you want to mark ; ${aiCell} ${botLabel}`
       },
       {
         id: `ai-board-${Date.now()}`,
@@ -472,21 +481,23 @@ export const Terminal: FC<TerminalProps> = ({
             "  python tictactoe_game.py  - Start/Restart the Tic-Tac-Toe game",
             "  cat tictactoe_game.py     - View the original Python source code",
             "  restart                   - Reset game to initial state",
-            "  mode ai / mode pvp        - Switch between Bot and 2-Player mode",
+            "  mode random               - 1 Player vs Random Bot (Default)",
+            "  mode smart                - 1 Player vs Smart Bot",
+            "  mode 2p / mode pvp        - 2 Players (PvP local multiplayer)",
             "  ls / dir                  - List files in current directory",
             "  clear / cls               - Clear terminal screen",
             "  help                      - Show this command reference"
           ]
         }
       ]);
-    } else if (rawCmd === 'mode ai') {
-      setGameState(createInitialState('ai'));
+    } else if (rawCmd === 'mode random' || rawCmd === 'mode easy' || rawCmd === 'mode ai' || rawCmd === 'mode 1p') {
+      setGameState(createInitialState('ai-random'));
       setLines(prev => [
         ...prev,
         {
           id: `mode-${Date.now()}`,
           type: 'system',
-          content: "Switched to 'vs Computer (AI)' mode. Game restarted!"
+          content: "Switched to '1 Player vs Random Bot' mode (Default). Game restarted!"
         },
         {
           id: `guide-${Date.now()}`,
@@ -495,7 +506,23 @@ export const Terminal: FC<TerminalProps> = ({
         }
       ]);
       setInputPrompt('user1: enter which cell do you want to mark ; ');
-    } else if (rawCmd === 'mode pvp') {
+    } else if (rawCmd === 'mode smart' || rawCmd === 'mode hard') {
+      setGameState(createInitialState('ai-smart'));
+      setLines(prev => [
+        ...prev,
+        {
+          id: `mode-${Date.now()}`,
+          type: 'system',
+          content: "Switched to '1 Player vs Smart Bot' mode. Game restarted!"
+        },
+        {
+          id: `guide-${Date.now()}`,
+          type: 'guide',
+          content: INITIAL_GUIDE
+        }
+      ]);
+      setInputPrompt('user1: enter which cell do you want to mark ; ');
+    } else if (rawCmd === 'mode pvp' || rawCmd === 'mode 2p') {
       setGameState(createInitialState('pvp'));
       setLines(prev => [
         ...prev,

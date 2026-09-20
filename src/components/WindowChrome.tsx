@@ -1,12 +1,14 @@
 import type { FC } from 'react';
-import { RotateCcw, Bot, Users, Code, Maximize2, Minimize2, Minus, X } from 'lucide-react';
+import { RotateCcw, Bot, Users, Code, Maximize2, Minimize2, Minus, X, Dices, Sparkles } from 'lucide-react';
+import { GameMode } from '../game/tictactoe_engine';
 
 interface WindowChromeProps {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   onRestart: () => void;
-  gameMode: 'pvp' | 'ai';
+  gameMode: GameMode;
   onToggleGameMode: () => void;
+  onToggleBotDifficulty: () => void;
   onOpenCodeModal: () => void;
 }
 
@@ -16,6 +18,7 @@ export const WindowChrome: FC<WindowChromeProps> = ({
   onRestart,
   gameMode,
   onToggleGameMode,
+  onToggleBotDifficulty,
   onOpenCodeModal,
 }) => {
   return (
@@ -52,9 +55,9 @@ export const WindowChrome: FC<WindowChromeProps> = ({
         <button
           className="icon-btn"
           onClick={onToggleGameMode}
-          title={gameMode === 'ai' ? 'Currently in 1-Player mode (You vs Computer). Click to switch to 2-Player mode.' : 'Currently in 2-Player mode. Click to switch to 1-Player mode (vs Computer).'}
+          title={gameMode !== 'pvp' ? 'Currently in 1-Player mode (vs Computer). Click to switch to 2 Players.' : 'Currently in 2-Player mode. Click to switch to 1 Player (vs Computer).'}
         >
-          {gameMode === 'ai' ? (
+          {gameMode !== 'pvp' ? (
             <>
               <Users size={13} style={{ color: '#4ade80' }} />
               <span>Change to 2 Players</span>
@@ -66,6 +69,28 @@ export const WindowChrome: FC<WindowChromeProps> = ({
             </>
           )}
         </button>
+
+        {/* Bot Style Toggle: Random (default) vs Smart */}
+        {gameMode !== 'pvp' && (
+          <button
+            className="icon-btn"
+            onClick={onToggleBotDifficulty}
+            title={gameMode === 'ai-random' ? 'Current Bot: Random Shots (Default). Click to switch to Smart Bot.' : 'Current Bot: Smart Tactical. Click to switch to Random Bot.'}
+            style={{ border: '1px solid rgba(255, 255, 255, 0.12)' }}
+          >
+            {gameMode === 'ai-random' ? (
+              <>
+                <Dices size={13} style={{ color: '#facc15' }} />
+                <span>Bot: Random</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={13} style={{ color: '#c084fc' }} />
+                <span>Bot: Smart</span>
+              </>
+            )}
+          </button>
+        )}
 
         {/* View Code Button */}
         <button

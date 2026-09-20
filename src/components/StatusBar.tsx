@@ -46,6 +46,16 @@ export const StatusBar: FC<StatusBarProps> = ({
             </span>
           )}
         </div>
+
+        <div className="status-item">
+          <span>Mode:</span>
+          <span style={{ 
+            color: gameState.mode === 'pvp' ? '#4ade80' : gameState.mode === 'ai-smart' ? '#c084fc' : '#38bdf8', 
+            fontWeight: 500 
+          }}>
+            {gameState.mode === 'pvp' ? '2 Players' : gameState.mode === 'ai-smart' ? '1P (Smart Bot)' : '1P (Random Bot)'}
+          </span>
+        </div>
       </div>
 
       {/* ── Right toggles & info ── */}

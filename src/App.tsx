@@ -9,7 +9,7 @@ import { playEnterSound } from './lib/sound';
 import './styles/terminal.css';
 
 export function App() {
-  const [gameState, setGameState] = useState<GameState>(() => createInitialState('ai'));
+  const [gameState, setGameState] = useState<GameState>(() => createInitialState('ai-random'));
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [crtEnabled, setCrtEnabled] = useState(false);
@@ -36,7 +36,15 @@ export function App() {
   };
 
   const handleToggleGameMode = () => {
-    const nextMode = gameState.mode === 'pvp' ? 'ai' : 'pvp';
+    // Toggle between 1 Player (Random bot default) and 2 Players (PvP)
+    const nextMode = gameState.mode === 'pvp' ? 'ai-random' : 'pvp';
+    setGameState(createInitialState(nextMode));
+    setTerminalKey(k => k + 1);
+  };
+
+  const handleToggleBotDifficulty = () => {
+    // Toggle between Random Bot and Smart Bot
+    const nextMode = gameState.mode === 'ai-random' ? 'ai-smart' : 'ai-random';
     setGameState(createInitialState(nextMode));
     setTerminalKey(k => k + 1);
   };
@@ -58,6 +66,7 @@ export function App() {
           onRestart={handleRestart}
           gameMode={gameState.mode}
           onToggleGameMode={handleToggleGameMode}
+          onToggleBotDifficulty={handleToggleBotDifficulty}
           onOpenCodeModal={() => setIsCodeModalOpen(true)}
         />
 
