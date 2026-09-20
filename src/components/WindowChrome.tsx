@@ -48,21 +48,21 @@ export const WindowChrome: FC<WindowChromeProps> = ({
           <span>Restart</span>
         </button>
 
-        {/* AI / PvP Toggle */}
+        {/* Mode Toggle Button: 1 Player default, button to change to 2 Players */}
         <button
           className="icon-btn"
           onClick={onToggleGameMode}
-          title={`Switch to ${gameMode === 'pvp' ? 'vs Computer (AI)' : '2-Player (PvP)'}`}
+          title={gameMode === 'ai' ? 'Currently in 1-Player mode (You vs Computer). Click to switch to 2-Player mode.' : 'Currently in 2-Player mode. Click to switch to 1-Player mode (vs Computer).'}
         >
-          {gameMode === 'pvp' ? (
+          {gameMode === 'ai' ? (
             <>
               <Users size={13} style={{ color: '#4ade80' }} />
-              <span>2 Players</span>
+              <span>Change to 2 Players</span>
             </>
           ) : (
             <>
               <Bot size={13} style={{ color: '#38bdf8' }} />
-              <span>vs Bot</span>
+              <span>Change to 1 Player</span>
             </>
           )}
         </button>

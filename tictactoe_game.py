@@ -5,7 +5,7 @@ def main():
     
     print("1 | 2 | 3","---------","4 | 5 | 6","---------","7 | 8 | 9",sep="\n")
     list=[]
-    for i in range(9):
+    for i  in range(9):
         turn=0
         if i%2==0:
             symbol="x"
@@ -55,3 +55,4 @@ def main():
     print(list)
 while True:       
     main()
+    

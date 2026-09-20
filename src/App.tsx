@@ -9,7 +9,7 @@ import { playEnterSound } from './lib/sound';
 import './styles/terminal.css';
 
 export function App() {
-  const [gameState, setGameState] = useState<GameState>(() => createInitialState('pvp'));
+  const [gameState, setGameState] = useState<GameState>(() => createInitialState('ai'));
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [crtEnabled, setCrtEnabled] = useState(false);
