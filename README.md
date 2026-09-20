@@ -1,6 +1,20 @@
 # 🎮 Terminal Tic-Tac-Toe (Windows PowerShell Style)
 
-# My first ever project during python fundamentals, first semester 2024 in raw python on terminal
+```text
+╭──────────────────────────────────────────────────────────────────────────╮
+│  ████████╗██╗ ██████╗████████╗ █████╗  ██████╗████████╗ ██████╗ ███████╗ │
+│  ╚══██╔══╝██║██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██╔════╝ │
+│     ██║   ██║██║        ██║   ███████║██║        ██║   ██║   ██║█████╗   │
+│     ██║   ██║██║        ██║   ██╔══██║██║        ██║   ██║   ██║██╔══╝   │
+│     ██║   ██║╚██████╗   ██║   ██║  ██║╚██████╗   ██║   ╚██████╔╝███████╗ │
+│     ╚═╝   ╚═╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚══════╝ │
+│                                                                          │
+│   🎮 Python Tic-Tac-Toe • Windows Terminal Edition (safetynet2)          │
+│   🎲 Default: 1 Player vs Random Bot  •  🔄 Restart: Button or Ctrl+R    │
+╰──────────────────────────────────────────────────────────────────────────╯
+```
+
+> **My first ever project during python fundamentals, first semester 2024 in raw python on terminal**
 
 A retro-modern web terminal application styled after **Windows Terminal / PowerShell** (inspired by [`hammadshakeelai/cli-chatbot`](https://github.com/hammadshakeelai/cli-chatbot)), running the interactive Tic-Tac-Toe Python game originally created in [`hammadshakeelai/safetynet2`](https://github.com/hammadshakeelai/safetynet2).
 

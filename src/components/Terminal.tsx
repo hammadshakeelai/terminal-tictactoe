@@ -34,9 +34,23 @@ interface TerminalProps {
 
 interface TerminalLine {
   id: string;
-  type: 'banner' | 'prompt' | 'system' | 'guide' | 'board' | 'win' | 'draw' | 'error' | 'code';
+  type: 'banner' | 'ascii' | 'prompt' | 'system' | 'guide' | 'board' | 'win' | 'draw' | 'error' | 'code';
   content: string | string[];
 }
+
+const ASCII_BANNER = [
+  "╭──────────────────────────────────────────────────────────────────────────╮",
+  "│  ████████╗██╗ ██████╗████████╗ █████╗  ██████╗████████╗ ██████╗ ███████╗ │",
+  "│  ╚══██╔══╝██║██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██╔════╝ │",
+  "│     ██║   ██║██║        ██║   ███████║██║        ██║   ██║   ██║█████╗   │",
+  "│     ██║   ██║██║        ██║   ██╔══██║██║        ██║   ██║   ██║██╔══╝   │",
+  "│     ██║   ██║╚██████╗   ██║   ██║  ██║╚██████╗   ██║   ╚██████╔╝███████╗ │",
+  "│     ╚═╝   ╚═╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚══════╝ │",
+  "│                                                                          │",
+  "│   🎮 Python Tic-Tac-Toe • Windows Terminal Edition (safetynet2)          │",
+  "│   🎲 Default: 1 Player vs Random Bot  •  🔄 Restart: Button or Ctrl+R    │",
+  "╰──────────────────────────────────────────────────────────────────────────╯"
+];
 
 export const Terminal: FC<TerminalProps> = ({
   gameState,
@@ -77,6 +91,11 @@ export const Terminal: FC<TerminalProps> = ({
 
     async function boot() {
       const bannerLines: TerminalLine[] = [
+        {
+          id: 'b-ascii',
+          type: 'ascii',
+          content: ASCII_BANNER
+        },
         {
           id: 'b1',
           type: 'banner',
@@ -612,6 +631,14 @@ export const Terminal: FC<TerminalProps> = ({
                     </div>
                   );
                 })}
+              </div>
+            );
+          }
+
+          if (line.type === 'ascii') {
+            return (
+              <div key={line.id} className="ascii-banner">
+                {Array.isArray(line.content) ? line.content.join('\n') : line.content}
               </div>
             );
           }

@@ -319,6 +319,34 @@ html, body, #root {
   border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
+.ascii-banner {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  line-height: 1.18;
+  margin: 8px 0 14px 0;
+  text-shadow: 0 0 12px rgba(76, 194, 255, 0.45);
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre;
+  user-select: none;
+  scrollbar-width: none;
+}
+.ascii-banner::-webkit-scrollbar { display: none; }
+
+@media (max-width: 768px) {
+  .ascii-banner {
+    font-size: 8px;
+    line-height: 1.12;
+  }
+}
+
+@media (max-width: 480px) {
+  .ascii-banner {
+    font-size: 6px;
+    line-height: 1.05;
+  }
+}
+
 .ps-prompt {
   color: var(--accent);
   font-weight: 600;
