@@ -80,35 +80,11 @@ export function createInitialState(mode: 'pvp' | 'ai' = 'pvp'): GameState {
 }
 
 /**
- * Intelligent minimax AI move selector for 'o'
+ * Random move selector for bot ('o') - purely random shots
  */
-export function getBestAIMove(board: CellValue[], picked: number[]): number {
+export function getBestAIMove(_board: CellValue[], picked: number[]): number {
   const available = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(c => !picked.includes(c));
   if (available.length === 0) return 0;
-
-  // 1. Can AI win in one move?
-  for (const cell of available) {
-    const copy = [...board];
-    copy[cell] = 'o';
-    if (checkWinner(copy) === 'user2') return cell;
-  }
-
-  // 2. Can player win in one move? Block it!
-  for (const cell of available) {
-    const copy = [...board];
-    copy[cell] = 'x';
-    if (checkWinner(copy) === 'user1') return cell;
-  }
-
-  // 3. Take center cell 5 if available
-  if (available.includes(5)) return 5;
-
-  // 4. Take corners
-  const corners = [1, 3, 7, 9].filter(c => available.includes(c));
-  if (corners.length > 0) {
-    return corners[Math.floor(Math.random() * corners.length)];
-  }
-
-  // 5. Pick any available
+  // Random shot from available open cells
   return available[Math.floor(Math.random() * available.length)];
 }
